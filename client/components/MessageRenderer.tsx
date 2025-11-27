@@ -1,5 +1,6 @@
 import { Copy, Check } from "lucide-react";
 import { useState, ReactNode } from "react";
+import { escapeHtml } from "@/lib/security";
 
 interface MessageRendererProps {
   content: string;
@@ -48,7 +49,7 @@ function CodeBlockWithCopy({
       </div>
       <pre className="p-5 overflow-x-auto">
         <code className="font-mono text-sm leading-relaxed text-white/90 whitespace-pre">
-          {code}
+          {escapeHtml(code)}
         </code>
       </pre>
     </div>
@@ -271,21 +272,22 @@ function parseInlineMarkdown(text: string): ReactNode[] {
   // Render with formatting
   allMatches.forEach((m, idx) => {
     if (m.start > lastIndex) {
-      parts.push(text.substring(lastIndex, m.start));
+      // Escape plain text to prevent XSS
+      parts.push(escapeHtml(text.substring(lastIndex, m.start)));
     }
 
     switch (m.type) {
       case "bold":
         parts.push(
           <strong key={idx} className="font-bold text-white">
-            {m.content}
+            {escapeHtml(m.content)}
           </strong>,
         );
         break;
       case "italic":
         parts.push(
           <em key={idx} className="italic text-white/95">
-            {m.content}
+            {escapeHtml(m.content)}
           </em>,
         );
         break;
@@ -295,7 +297,7 @@ function parseInlineMarkdown(text: string): ReactNode[] {
             key={idx}
             className="bg-white/15 px-2 py-1 rounded font-mono text-sm text-orange-300 border border-white/10 font-semibold"
           >
-            {m.content}
+            {escapeHtml(m.content)}
           </code>,
         );
         break;
@@ -308,7 +310,7 @@ function parseInlineMarkdown(text: string): ReactNode[] {
             rel="noopener noreferrer"
             className="text-orange-400 hover:text-orange-300 underline font-medium transition-colors"
           >
-            {m.content}
+            {escapeHtml(m.content)}
           </a>,
         );
         break;
@@ -320,10 +322,11 @@ function parseInlineMarkdown(text: string): ReactNode[] {
   });
 
   if (lastIndex < text.length) {
-    parts.push(text.substring(lastIndex));
+    // Escape remaining plain text to prevent XSS
+    parts.push(escapeHtml(text.substring(lastIndex)));
   }
 
-  return parts.length > 0 ? parts : [text];
+  return parts.length > 0 ? parts : [escapeHtml(text)];
 }
 
 export function MessageRenderer({

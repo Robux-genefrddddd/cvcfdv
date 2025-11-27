@@ -3,6 +3,13 @@ import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { MessagesService, Message } from "@/lib/messages";
 import { AIService } from "@/lib/ai";
+import {
+  validateMessageContent,
+  detectInjectionAttempt,
+  sanitizeInput,
+  RateLimiter,
+  escapeHtml,
+} from "@/lib/security";
 import { toast } from "sonner";
 import { MessageRenderer } from "@/components/MessageRenderer";
 import { ThinkingAnimation } from "@/components/ThinkingAnimation";
@@ -27,7 +34,7 @@ const EMOJIS = [
   "❤️",
   "✨",
   "🚀",
-  "💯",
+  "���",
 ];
 
 interface ChatMessage {
@@ -51,6 +58,9 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
   const [isThinking, setIsThinking] = useState(false);
   const [generatingImage, setGeneratingImage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Rate limiter: max 30 messages per minute
+  const messageRateLimiter = useRef(new RateLimiter("send_message", 30, 60000));
 
   useEffect(() => {
     if (conversationId && user?.uid) {
@@ -94,6 +104,26 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
   const handleSend = async () => {
     if (!message.trim() || !user || !userData || !conversationId) return;
 
+    // Rate limiting check
+    if (!messageRateLimiter.current.isAllowed()) {
+      toast.error(
+        "Trop de messages. Veuillez attendre avant d'envoyer un nouveau message.",
+      );
+      return;
+    }
+
+    // Validate message content
+    if (!validateMessageContent(message)) {
+      toast.error("Message invalide. Longueur: 1-5000 caractères.");
+      return;
+    }
+
+    // Detect injection attempts
+    if (detectInjectionAttempt(message)) {
+      toast.error("Message contains invalid characters or patterns.");
+      return;
+    }
+
     // Check message limit
     if (userData.messagesUsed >= userData.messagesLimit) {
       toast.error(
@@ -110,7 +140,9 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
       );
     }
 
-    const userMessageText = message;
+    // Sanitize message
+    const sanitizedMessage = sanitizeInput(message.trim());
+    const userMessageText = sanitizedMessage;
     const isImage = isImageRequest(userMessageText);
     setMessage("");
     setLoading(true);
@@ -230,10 +262,10 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
   return (
     <div
       id="chat-area"
-      className="flex-1 flex flex-col bg-gradient-to-b from-background via-background to-background/95"
+      className="flex-1 flex flex-col bg-gradient-to-b from-background via-background to-background/95 min-h-0"
     >
-      {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto flex flex-col px-4 sm:px-6 md:px-8 py-4 sm:py-6 animate-fadeIn space-y-4 sm:space-y-6">
+      {/* Main Content Area - Messages Container with Fixed Height & Scrollbar */}
+      <div className="flex-1 overflow-y-auto flex flex-col px-4 sm:px-6 md:px-8 py-4 sm:py-6 animate-fadeIn space-y-4 sm:space-y-6 min-h-0">
         {!conversationId ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
@@ -302,7 +334,7 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                         {user?.displayName?.[0]?.toUpperCase() || "U"}
                       </span>
                     </div>
-                    <div className="flex-1 max-w-xs sm:max-w-sm md:max-w-lg">
+                    <div className="flex-1 max-w-xs sm:max-w-sm md:max-w-lg max-h-96 overflow-y-auto">
                       <div className="rounded-2xl rounded-tr-none bg-gradient-to-br from-blue-600/40 to-blue-700/30 border border-blue-500/30 px-5 py-3 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow text-white/95 text-sm leading-relaxed break-words">
                         <MessageRenderer
                           content={msg.content}
@@ -316,7 +348,7 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center flex-shrink-0 mt-1 shadow-md border border-orange-400/50 ring-2 ring-orange-400/20">
                       <span className="text-xs font-bold text-white">V</span>
                     </div>
-                    <div className="flex-1 max-w-xs sm:max-w-sm md:max-w-lg">
+                    <div className="flex-1 max-w-xs sm:max-w-sm md:max-w-lg max-h-96 overflow-y-auto">
                       <div className="rounded-2xl rounded-tl-none bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-white/10 px-5 py-4 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow text-white/90 text-sm leading-relaxed break-words">
                         <MessageRenderer
                           content={msg.content}
@@ -343,9 +375,9 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
         )}
       </div>
 
-      {/* Message Input Area */}
+      {/* Message Input Area - Fixed at Bottom */}
       <div
-        className="px-4 sm:px-6 md:px-8 py-4 sm:py-6 animate-slideUp"
+        className="px-4 sm:px-6 md:px-8 py-4 sm:py-6 animate-slideUp border-t border-white/10 bg-gradient-to-t from-background to-transparent"
         style={{ animationDelay: "0.2s" }}
       >
         <div
