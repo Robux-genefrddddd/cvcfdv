@@ -107,7 +107,7 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border border-white/[0.1] rounded-xl max-w-md h-[90vh] flex flex-col p-0 overflow-hidden">
+      <DialogContent className="bg-[#0f0f0f] border-0 rounded-[12px] w-[460px] max-h-[85vh] flex flex-col p-0 overflow-hidden shadow-2xl">
         {/* Header */}
         <DialogHeader className="px-6 py-5 border-b border-white/[0.08]">
           <DialogTitle className="text-foreground text-xl font-semibold">
