@@ -213,9 +213,9 @@ export function Sidebar({
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 w-56 sm:w-64 bg-sidebar border-r-2 border-white/20 flex flex-col transition-transform duration-300 ${
+        className={`fixed inset-y-0 left-0 w-48 sm:w-56 bg-sidebar border-r border-white/[0.08] flex flex-col transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } z-50 animate-slideInLeft shadow-2xl shadow-black/50`}
+        } z-50 animate-slideInLeft`}
       >
         {/* Header - Minimal */}
         <div className="p-3 sm:p-4 animate-fadeIn">
