@@ -16,6 +16,7 @@ function CodeBlockWithCopy({
   language: string;
   code: string;
 }) {
+  const { isDark } = useTheme();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -26,24 +27,43 @@ function CodeBlockWithCopy({
 
   return (
     <div
-      className="my-3 rounded-lg overflow-hidden border border-white/10 shadow-lg hover:shadow-xl transition-shadow"
-      style={{ backgroundColor: "#0f1117" }}
+      className={`my-3 rounded-lg overflow-hidden border shadow-lg hover:shadow-xl transition-all duration-300 ${
+        isDark
+          ? "border-white/10"
+          : "border-black/[0.08]"
+      }`}
+      style={{
+        backgroundColor: isDark ? "#0f1117" : "#F5F5F5"
+      }}
     >
       <div
-        className="flex items-center justify-between px-4 py-3 border-b border-white/10"
-        style={{ backgroundColor: "rgba(88, 166, 255, 0.1)" }}
+        className="flex items-center justify-between px-4 py-3 border-b transition-all duration-300"
+        style={{
+          backgroundColor: isDark ? "rgba(88, 166, 255, 0.1)" : "rgba(59, 130, 246, 0.05)",
+          borderColor: isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.08)"
+        }}
       >
-        <span className="text-xs font-mono text-orange-300 font-semibold uppercase tracking-wide">
+        <span
+          className={`text-xs font-mono font-semibold uppercase tracking-wide transition-colors duration-300 ${
+            isDark
+              ? "text-orange-300"
+              : "text-orange-600"
+          }`}
+        >
           {language || "code"}
         </span>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-white/70 hover:text-white text-xs font-medium transition-all duration-200 hover:shadow-md"
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 hover:shadow-md ${
+            isDark
+              ? "bg-white/10 hover:bg-white/20 text-white/70 hover:text-white"
+              : "bg-black/[0.08] hover:bg-black/[0.12] text-[#3F3F3F] hover:text-[#1A1A1A]"
+          }`}
           title="Copier le code"
         >
           {copied ? (
             <>
-              <Check size={14} className="text-green-400" />
+              <Check size={14} className={isDark ? "text-green-400" : "text-green-600"} />
               <span>Copié!</span>
             </>
           ) : (
@@ -55,7 +75,13 @@ function CodeBlockWithCopy({
         </button>
       </div>
       <pre className="p-4 overflow-x-auto">
-        <code className="font-mono text-sm leading-[1.55] text-white/90 whitespace-pre">
+        <code
+          className={`font-mono text-sm leading-[1.55] whitespace-pre transition-colors duration-300 ${
+            isDark
+              ? "text-white/90"
+              : "text-[#1A1A1A]/90"
+          }`}
+        >
           {escapeHtml(code)}
         </code>
       </pre>
