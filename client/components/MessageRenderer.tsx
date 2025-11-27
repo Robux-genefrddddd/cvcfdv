@@ -24,8 +24,14 @@ function CodeBlockWithCopy({
   };
 
   return (
-    <div className="my-4 rounded-lg overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-white/10 shadow-lg hover:shadow-xl transition-shadow">
-      <div className="flex items-center justify-between bg-gradient-to-r from-orange-600/20 to-orange-500/10 px-4 py-3 border-b border-white/10">
+    <div
+      className="my-3 rounded-lg overflow-hidden border border-white/10 shadow-lg hover:shadow-xl transition-shadow"
+      style={{ backgroundColor: "#0f1117" }}
+    >
+      <div
+        className="flex items-center justify-between px-4 py-3 border-b border-white/10"
+        style={{ backgroundColor: "rgba(88, 166, 255, 0.1)" }}
+      >
         <span className="text-xs font-mono text-orange-300 font-semibold uppercase tracking-wide">
           {language || "code"}
         </span>
@@ -47,8 +53,8 @@ function CodeBlockWithCopy({
           )}
         </button>
       </div>
-      <pre className="p-5 overflow-x-auto">
-        <code className="font-mono text-sm leading-relaxed text-white/90 whitespace-pre">
+      <pre className="p-4 overflow-x-auto">
+        <code className="font-mono text-sm leading-[1.55] text-white/90 whitespace-pre">
           {escapeHtml(code)}
         </code>
       </pre>
