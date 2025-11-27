@@ -251,35 +251,35 @@ export function Sidebar({
                     <MoreVertical size={16} />
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-40 p-1.5 bg-card border border-white/[0.1] rounded-lg shadow-lg">
-                  <div className="space-y-1">
+                <PopoverContent className="w-40 p-1 bg-card border border-white/[0.1] rounded-lg shadow-lg">
+                  <div className="space-y-0.5">
                     <button
                       onClick={() => {
                         setIsSettingsOpen(true);
                         setIsMenuOpen(false);
                       }}
-                      className="w-full text-left px-2.5 py-2 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-white/10 transition-colors"
+                      className="w-full text-left px-3 py-2 rounded-lg text-xs text-foreground/70 hover:text-foreground hover:bg-white/[0.08] transition-colors hover:-translate-y-0.5"
                     >
-                      Settings
+                      Paramètres
                     </button>
                     <button
                       onClick={() => {
                         setIsHelpOpen(true);
                         setIsMenuOpen(false);
                       }}
-                      className="w-full text-left px-2.5 py-2 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-white/10 transition-colors"
+                      className="w-full text-left px-3 py-2 rounded-lg text-xs text-foreground/70 hover:text-foreground hover:bg-white/[0.08] transition-colors hover:-translate-y-0.5"
                     >
-                      Help
+                      Aide
                     </button>
                     {userData?.isAdmin && (
                       <>
-                        <div className="h-px bg-white/[0.08] my-1" />
+                        <div className="h-px bg-white/[0.08] my-0.5" />
                         <button
                           onClick={() => {
                             navigate("/admin");
                             setIsMenuOpen(false);
                           }}
-                          className="w-full text-left px-2.5 py-2 rounded-lg text-xs text-primary font-medium hover:bg-white/10 transition-colors"
+                          className="w-full text-left px-3 py-2 rounded-lg text-xs text-primary font-medium hover:bg-white/[0.08] transition-colors hover:-translate-y-0.5"
                         >
                           Admin
                         </button>
