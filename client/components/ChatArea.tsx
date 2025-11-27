@@ -34,7 +34,7 @@ const EMOJIS = [
   "����",
   "❤️",
   "✨",
-  "🚀",
+  "����",
   "���",
 ];
 
@@ -320,7 +320,7 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
             </div>
           </div>
         ) : (
-          <div className="space-y-6 pb-4">
+          <div className="space-y-4 pb-4">
             {chatMessages.map((msg) => (
               <div
                 key={msg.id}
@@ -330,7 +330,7 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
               >
                 {msg.role === "user" ? (
                   <div className="flex gap-2 sm:gap-3 max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-2xl items-start flex-row-reverse">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0 mt-1 shadow-md border border-blue-400/50 ring-2 ring-blue-400/20 overflow-hidden">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1 overflow-hidden">
                       {userData?.profilePhotoURL ? (
                         <img
                           src={userData.profilePhotoURL}
@@ -350,7 +350,7 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                       )}
                     </div>
                     <div className="flex-1 max-w-xs sm:max-w-sm md:max-w-lg max-h-96 overflow-y-auto">
-                      <div className="rounded-2xl rounded-tr-none bg-gradient-to-br from-blue-600/40 to-blue-700/30 border border-blue-500/30 px-5 py-3 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow text-white/95 text-sm leading-relaxed break-words">
+                      <div className="rounded-xl rounded-tr-none bg-primary text-primary-foreground px-4 py-2.5 text-sm leading-relaxed break-words">
                         <MessageRenderer
                           content={msg.content}
                           role={msg.role}
@@ -360,11 +360,11 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                   </div>
                 ) : (
                   <div className="flex gap-2 sm:gap-3 max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-2xl items-start">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center flex-shrink-0 mt-1 shadow-md border border-orange-400/50 ring-2 ring-orange-400/20">
-                      <span className="text-xs font-bold text-white">V</span>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-xs font-bold text-secondary-foreground">V</span>
                     </div>
                     <div className="flex-1 max-w-xs sm:max-w-sm md:max-w-lg max-h-96 overflow-y-auto">
-                      <div className="rounded-2xl rounded-tl-none bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-white/10 px-5 py-4 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow text-white/90 text-sm leading-relaxed break-words">
+                      <div className="rounded-xl rounded-tl-none bg-secondary text-secondary-foreground px-4 py-2.5 text-sm leading-relaxed break-words">
                         <MessageRenderer
                           content={msg.content}
                           role={msg.role}
@@ -377,9 +377,9 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
             ))}
             {(loading || isThinking) && (
               <div className="flex justify-start animate-slideUp">
-                <div className="flex gap-3 items-start">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center flex-shrink-0 mt-1 shadow-md border border-orange-400/50 ring-2 ring-orange-400/20">
-                    <span className="text-xs font-bold text-white">V</span>
+                <div className="flex gap-2 items-start">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-xs font-bold text-secondary-foreground">V</span>
                   </div>
                   <ThinkingAnimation />
                 </div>
