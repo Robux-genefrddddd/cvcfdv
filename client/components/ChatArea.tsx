@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import { MessageRenderer } from "@/components/MessageRenderer";
 import { ThinkingAnimation } from "@/components/ThinkingAnimation";
+import { TypingIndicator } from "@/components/TypingIndicator";
 import {
   Popover,
   PopoverContent,
