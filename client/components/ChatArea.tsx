@@ -54,13 +54,6 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
   // Rate limiter: max 30 messages per minute
   const messageRateLimiter = useRef(new RateLimiter("send_message", 30, 60000));
 
-  const handleTextareaAutoResize = () => {
-    if (!textareaRef.current) return;
-    textareaRef.current.style.height = `${AUTO_RESIZE_CONFIG.minHeight}px`;
-    const scrollHeight = textareaRef.current.scrollHeight;
-    const newHeight = Math.min(scrollHeight, AUTO_RESIZE_CONFIG.maxHeight);
-    textareaRef.current.style.height = `${newHeight}px`;
-  };
 
   const getCharacterDelay = (char: string, nextChar?: string): number => {
     const baseDelay = 20;
