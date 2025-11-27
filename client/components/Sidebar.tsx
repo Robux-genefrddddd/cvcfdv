@@ -229,7 +229,7 @@ export function Sidebar({
                   {loading ? "..." : userData?.displayName || "User"}
                 </p>
                 <p className="text-xs text-muted-foreground truncate leading-tight">
-                  {loading ? "..." : (userData?.email?.split("@")[0] || "Pro")}
+                  {loading ? "..." : userData?.email?.split("@")[0] || "Pro"}
                 </p>
               </div>
             </div>
