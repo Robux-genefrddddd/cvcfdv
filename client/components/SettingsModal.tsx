@@ -310,8 +310,12 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
             disabled={!hasChanges || isSaving}
             className={`w-full px-4 py-3 font-medium text-sm rounded-[10px] transition-all duration-300 flex items-center justify-center gap-2 ${
               saveSuccess
-                ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                : "bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 hover:border-primary/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                ? isDark
+                  ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                  : "bg-green-100 text-green-700 border border-green-300"
+                : isDark
+                ? "bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 hover:border-primary/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                : "bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 hover:border-primary/50 disabled:opacity-50 disabled:cursor-not-allowed"
             }`}
           >
             {isSaving ? (
