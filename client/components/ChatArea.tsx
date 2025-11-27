@@ -630,26 +630,57 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                           </span>
                         </div>
                         <div className="flex-1 max-w-md max-h-96 overflow-y-auto">
-                          <div
-                            className="rounded-lg rounded-tl-none py-2 px-3 text-sm break-words transition-all duration-300"
-                            style={{
-                              backgroundColor: isDark ? "#111418" : "#E5E7EB",
-                              color: isDark ? "#E5E7EB" : "#1E1E1E",
-                              height: "auto",
-                              lineHeight: "1.3",
-                              border: isDark
-                                ? "1px solid rgba(255, 255, 255, 0.08)"
-                                : "1px solid rgba(0, 0, 0, 0.06)",
-                              boxShadow: isDark
-                                ? "0 4px 16px rgba(0, 0, 0, 0.3)"
-                                : "0 2px 8px rgba(0, 0, 0, 0.08)",
-                            }}
-                          >
-                            <MessageRenderer
-                              content={displayContent}
-                              role={msg.role}
-                            />
-                          </div>
+                          {isLastMessage && blocks.length > 0 && renderedBlockCount > 0 ? (
+                            <div className="space-y-2.5">
+                              {blocks.slice(0, renderedBlockCount).map((block, blockIndex) => (
+                                <div
+                                  key={blockIndex}
+                                  className="rounded-lg rounded-tl-none py-2 px-3 text-sm break-words transition-all duration-300 animate-in fade-in slide-in-from-bottom-2"
+                                  style={{
+                                    backgroundColor: isDark ? "#111418" : "#E5E7EB",
+                                    color: isDark ? "#E5E7EB" : "#1E1E1E",
+                                    height: "auto",
+                                    lineHeight: "1.3",
+                                    border: isDark
+                                      ? "1px solid rgba(255, 255, 255, 0.08)"
+                                      : "1px solid rgba(0, 0, 0, 0.06)",
+                                    boxShadow: isDark
+                                      ? "0 4px 16px rgba(0, 0, 0, 0.3)"
+                                      : "0 2px 8px rgba(0, 0, 0, 0.08)",
+                                    animationDuration: "240ms",
+                                    animationDelay: `${blockIndex * 50}ms`,
+                                    animationFillMode: "both",
+                                  }}
+                                >
+                                  <MessageRenderer
+                                    content={block}
+                                    role={msg.role}
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div
+                              className="rounded-lg rounded-tl-none py-2 px-3 text-sm break-words transition-all duration-300"
+                              style={{
+                                backgroundColor: isDark ? "#111418" : "#E5E7EB",
+                                color: isDark ? "#E5E7EB" : "#1E1E1E",
+                                height: "auto",
+                                lineHeight: "1.3",
+                                border: isDark
+                                  ? "1px solid rgba(255, 255, 255, 0.08)"
+                                  : "1px solid rgba(0, 0, 0, 0.06)",
+                                boxShadow: isDark
+                                  ? "0 4px 16px rgba(0, 0, 0, 0.3)"
+                                  : "0 2px 8px rgba(0, 0, 0, 0.08)",
+                              }}
+                            >
+                              <MessageRenderer
+                                content={displayContent}
+                                role={msg.role}
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
