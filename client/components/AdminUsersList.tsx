@@ -50,7 +50,6 @@ export default function AdminUsersList({
   const loadUsers = async () => {
     try {
       // Get the current user's ID token
-      const auth = (await import("firebase/auth")).getAuth();
       const user = auth.currentUser;
 
       if (!user) {
