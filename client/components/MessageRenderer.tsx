@@ -1,7 +1,60 @@
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Copy, Check } from "lucide-react";
+import { useState } from "react";
+
 interface MessageRendererProps {
   content: string;
   role: "user" | "assistant";
   isStreaming?: boolean;
+}
+
+function CodeBlockWithCopy({
+  language,
+  code,
+}: {
+  language: string;
+  code: string;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="my-4 rounded-lg overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-white/10 shadow-lg hover:shadow-xl transition-shadow">
+      <div className="flex items-center justify-between bg-gradient-to-r from-orange-600/20 to-orange-500/10 px-4 py-3 border-b border-white/10">
+        <span className="text-xs font-mono text-orange-300 font-semibold uppercase tracking-wide">
+          {language || "code"}
+        </span>
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-white/70 hover:text-white text-xs font-medium transition-all duration-200 hover:shadow-md"
+          title="Copier le code"
+        >
+          {copied ? (
+            <>
+              <Check size={14} className="text-green-400" />
+              <span>Copié!</span>
+            </>
+          ) : (
+            <>
+              <Copy size={14} />
+              <span>Copier</span>
+            </>
+          )}
+        </button>
+      </div>
+      <pre className="p-5 overflow-x-auto">
+        <code className="font-mono text-sm leading-relaxed text-white/90 whitespace-pre">
+          {code}
+        </code>
+      </pre>
+    </div>
+  );
 }
 
 export function MessageRenderer({
@@ -27,91 +80,144 @@ export function MessageRenderer({
     );
   }
 
-  // Check if content contains code blocks (```code```)
-  const hasCodeBlock = /```[\s\S]*?```/.test(content);
-  const isCodeBlock = content.trim().startsWith("```") && content.trim().endsWith("```");
-
-  if (isCodeBlock || hasCodeBlock) {
-    // Handle code blocks
-    const codeBlockRegex = /```(\w*)\n?([\s\S]*?)```/g;
-    const parts: (string | React.ReactNode)[] = [];
-    let lastIndex = 0;
-    let match;
-
-    while ((match = codeBlockRegex.exec(content)) !== null) {
-      // Add text before code block
-      if (match.index > lastIndex) {
-        const textBefore = content.substring(lastIndex, match.index).trim();
-        if (textBefore) {
-          parts.push(
-            <p key={`text-${lastIndex}`} className="mb-4 leading-relaxed text-white/90">
-              {textBefore}
-            </p>
-          );
-        }
-      }
-
-      const lang = match[1] || "";
-      const code = match[2].trim();
-
-      parts.push(
-        <div
-          key={`code-${match.index}`}
-          className="my-4 rounded-xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-950 border border-white/10 shadow-lg"
-        >
-          {lang && (
-            <div className="bg-gradient-to-r from-orange-600/20 to-orange-500/10 px-4 py-2 text-xs font-mono text-orange-300 border-b border-white/10 font-semibold">
-              {lang}
-            </div>
-          )}
-          <pre className="p-5 overflow-x-auto">
-            <code className="font-mono text-sm leading-relaxed text-white/90">
-              {code}
-            </code>
-          </pre>
-        </div>
-      );
-
-      lastIndex = match.index + match[0].length;
-    }
-
-    // Add remaining text
-    if (lastIndex < content.length) {
-      const remaining = content.substring(lastIndex).trim();
-      if (remaining) {
-        parts.push(
-          <p key={`text-end`} className="mt-4 leading-relaxed text-white/90">
-            {remaining}
-          </p>
-        );
-      }
-    }
-
-    return (
-      <div className="space-y-3">
-        {parts}
-        {isStreaming && (
-          <span className="inline-block w-2 h-5 bg-white/50 ml-1 animate-pulse" />
-        )}
-      </div>
-    );
-  }
-
-  // Plain text rendering with better spacing for long text
-  const lines = content.split("\n");
-  const hasLongText = content.length > 150;
-
   return (
-    <div className={`text-white/90 ${hasLongText ? "space-y-2" : ""} leading-relaxed whitespace-pre-wrap break-words`}>
-      {hasLongText ? (
-        lines.map((line, idx) => (
-          <div key={idx} className={line.trim() === "" ? "h-2" : ""}>
-            {line || " "}
-          </div>
-        ))
-      ) : (
-        content
-      )}
+    <div className="prose prose-invert max-w-none text-white/90">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          code({ inline, className, children, ...props }: any) {
+            if (inline) {
+              return (
+                <code className="bg-white/15 px-2 py-1 rounded font-mono text-sm text-orange-300 border border-white/10 font-semibold">
+                  {children}
+                </code>
+              );
+            }
+
+            const match = /language-(\w+)/.exec(className || "");
+            const language = match ? match[1] : "";
+            const code = String(children).replace(/\n$/, "");
+
+            return (
+              <CodeBlockWithCopy language={language} code={code} />
+            );
+          },
+          p({ children }) {
+            return <p className="mb-3 leading-relaxed text-white/90">{children}</p>;
+          },
+          h1({ children }) {
+            return (
+              <h1 className="text-2xl font-bold mb-4 mt-6 text-white border-b border-white/20 pb-2">
+                {children}
+              </h1>
+            );
+          },
+          h2({ children }) {
+            return (
+              <h2 className="text-xl font-bold mb-3 mt-5 text-white border-b border-white/10 pb-1.5">
+                {children}
+              </h2>
+            );
+          },
+          h3({ children }) {
+            return (
+              <h3 className="text-lg font-bold mb-2 mt-4 text-white/95">
+                {children}
+              </h3>
+            );
+          },
+          ul({ children }) {
+            return (
+              <ul className="list-disc list-inside mb-3 space-y-2 text-white/90 pl-2">
+                {children}
+              </ul>
+            );
+          },
+          ol({ children }) {
+            return (
+              <ol className="list-decimal list-inside mb-3 space-y-2 text-white/90 pl-2">
+                {children}
+              </ol>
+            );
+          },
+          li({ children }) {
+            return (
+              <li className="text-white/90 leading-relaxed">
+                {children}
+              </li>
+            );
+          },
+          blockquote({ children }) {
+            return (
+              <blockquote className="border-l-4 border-orange-500 pl-4 py-2 my-3 text-white/70 italic bg-orange-500/10 rounded-r-lg">
+                {children}
+              </blockquote>
+            );
+          },
+          a({ href, children }) {
+            return (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-orange-400 hover:text-orange-300 underline font-medium transition-colors"
+              >
+                {children}
+              </a>
+            );
+          },
+          strong({ children }) {
+            return (
+              <strong className="font-bold text-white">
+                {children}
+              </strong>
+            );
+          },
+          em({ children }) {
+            return (
+              <em className="italic text-white/95">
+                {children}
+              </em>
+            );
+          },
+          table({ children }) {
+            return (
+              <div className="overflow-x-auto my-4 rounded-lg border border-white/10">
+                <table className="w-full border-collapse">{children}</table>
+              </div>
+            );
+          },
+          thead({ children }) {
+            return (
+              <thead className="bg-orange-600/20 border-b border-white/10">
+                {children}
+              </thead>
+            );
+          },
+          tbody({ children }) {
+            return <tbody>{children}</tbody>;
+          },
+          tr({ children }) {
+            return <tr className="border-b border-white/10 hover:bg-white/5 transition-colors">{children}</tr>;
+          },
+          th({ children }) {
+            return (
+              <th className="px-4 py-2 text-left font-bold text-white/90 text-sm">
+                {children}
+              </th>
+            );
+          },
+          td({ children }) {
+            return (
+              <td className="px-4 py-2 text-white/80 text-sm">
+                {children}
+              </td>
+            );
+          },
+        }}
+      >
+        {content}
+      </ReactMarkdown>
       {isStreaming && (
         <span className="inline-block w-2 h-5 bg-white/50 ml-1 animate-pulse" />
       )}
