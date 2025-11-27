@@ -272,7 +272,14 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
         saveMessage();
       }
     }
-  }, [isTyping, isRenderingBlocks, fullText, conversationId, user, chatMessages]);
+  }, [
+    isTyping,
+    isRenderingBlocks,
+    fullText,
+    conversationId,
+    user,
+    chatMessages,
+  ]);
 
   const loadMessages = async () => {
     if (!conversationId) return;
@@ -630,32 +637,38 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                           </span>
                         </div>
                         <div className="flex-1 max-w-md max-h-96 overflow-y-auto">
-                          {isLastMessage && blocks.length > 0 && renderedBlockCount > 0 ? (
+                          {isLastMessage &&
+                          blocks.length > 0 &&
+                          renderedBlockCount > 0 ? (
                             <div className="space-y-2.5">
-                              {blocks.slice(0, renderedBlockCount).map((block, blockIndex) => (
-                                <div
-                                  key={blockIndex}
-                                  className="rounded-lg rounded-tl-none py-2 px-3 text-sm break-words transition-all duration-300"
-                                  style={{
-                                    backgroundColor: isDark ? "#111418" : "#E5E7EB",
-                                    color: isDark ? "#E5E7EB" : "#1E1E1E",
-                                    height: "auto",
-                                    lineHeight: "1.3",
-                                    border: isDark
-                                      ? "1px solid rgba(255, 255, 255, 0.08)"
-                                      : "1px solid rgba(0, 0, 0, 0.06)",
-                                    boxShadow: isDark
-                                      ? "0 4px 16px rgba(0, 0, 0, 0.3)"
-                                      : "0 2px 8px rgba(0, 0, 0, 0.08)",
-                                    animation: `blockSlideUp 240ms cubic-bezier(0.34, 1.56, 0.64, 1) ${blockIndex * 50}ms both`,
-                                  }}
-                                >
-                                  <MessageRenderer
-                                    content={block}
-                                    role={msg.role}
-                                  />
-                                </div>
-                              ))}
+                              {blocks
+                                .slice(0, renderedBlockCount)
+                                .map((block, blockIndex) => (
+                                  <div
+                                    key={blockIndex}
+                                    className="rounded-lg rounded-tl-none py-2 px-3 text-sm break-words transition-all duration-300"
+                                    style={{
+                                      backgroundColor: isDark
+                                        ? "#111418"
+                                        : "#E5E7EB",
+                                      color: isDark ? "#E5E7EB" : "#1E1E1E",
+                                      height: "auto",
+                                      lineHeight: "1.3",
+                                      border: isDark
+                                        ? "1px solid rgba(255, 255, 255, 0.08)"
+                                        : "1px solid rgba(0, 0, 0, 0.06)",
+                                      boxShadow: isDark
+                                        ? "0 4px 16px rgba(0, 0, 0, 0.3)"
+                                        : "0 2px 8px rgba(0, 0, 0, 0.08)",
+                                      animation: `blockSlideUp 240ms cubic-bezier(0.34, 1.56, 0.64, 1) ${blockIndex * 50}ms both`,
+                                    }}
+                                  >
+                                    <MessageRenderer
+                                      content={block}
+                                      role={msg.role}
+                                    />
+                                  </div>
+                                ))}
                             </div>
                           ) : (
                             <div
@@ -697,7 +710,11 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                     >
                       <span className="text-xs font-bold text-white">V</span>
                     </div>
-                    {isTyping || isRenderingBlocks ? <TypingIndicator /> : <ThinkingAnimation />}
+                    {isTyping || isRenderingBlocks ? (
+                      <TypingIndicator />
+                    ) : (
+                      <ThinkingAnimation />
+                    )}
                   </div>
                 </div>
               )}
@@ -734,7 +751,8 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                 boxShadow: isDark
                   ? "0 2px 12px rgba(0, 0, 0, 0.25)"
                   : "0 1px 6px rgba(0, 0, 0, 0.08)",
-                animation: "messageInputSlideUp 180ms cubic-bezier(0.34, 1.56, 0.64, 1) 0ms both",
+                animation:
+                  "messageInputSlideUp 180ms cubic-bezier(0.34, 1.56, 0.64, 1) 0ms both",
               }}
             >
               {/* Inner Flex Container - Controls alignment and spacing */}
@@ -794,7 +812,9 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                           key={emoji}
                           onClick={() => addEmoji(emoji)}
                           className={`p-2 rounded-lg transition-all duration-200 text-xl hover:scale-125 transform ${
-                            isDark ? "hover:bg-white/10" : "hover:bg-black/[0.05]"
+                            isDark
+                              ? "hover:bg-white/10"
+                              : "hover:bg-black/[0.05]"
                           }`}
                         >
                           {emoji}
@@ -833,7 +853,8 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                     backgroundColor: "transparent",
                     border: "none",
                     outline: "none",
-                    fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                    fontFamily:
+                      "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     padding: "0",
                     margin: "0",
                     height: "auto",
@@ -859,7 +880,11 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                         ? "rgba(59, 130, 246, 0.1)"
                         : "rgba(59, 130, 246, 0.08)"
                       : "transparent",
-                    color: message.trim() ? "#3b82f6" : isDark ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)",
+                    color: message.trim()
+                      ? "#3b82f6"
+                      : isDark
+                        ? "rgba(255, 255, 255, 0.3)"
+                        : "rgba(0, 0, 0, 0.2)",
                     cursor: message.trim() ? "pointer" : "default",
                     flexShrink: 0,
                   }}
@@ -882,7 +907,11 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                   aria-label="Envoyer le message"
                 >
                   {loading ? (
-                    <Loader2 size={18} className="animate-spin" strokeWidth={2} />
+                    <Loader2
+                      size={18}
+                      className="animate-spin"
+                      strokeWidth={2}
+                    />
                   ) : (
                     <Send size={18} strokeWidth={2} />
                   )}

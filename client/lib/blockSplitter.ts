@@ -6,7 +6,7 @@ export function splitIntoBlocks(text: string): string[] {
   if (!text.trim()) return [];
 
   const blocks: string[] = [];
-  
+
   // First, split by double newlines (paragraph breaks)
   const paragraphs = text.split(/\n\n+/);
 
@@ -42,7 +42,7 @@ export function splitIntoBlocks(text: string): string[] {
     // For regular paragraphs, split if too long (> 300 chars)
     if (trimmed.length > 300) {
       const sentences = trimmed.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [trimmed];
-      
+
       let currentBlock = "";
       sentences.forEach((sentence) => {
         const sentenceTrimmed = sentence.trim();
@@ -53,7 +53,7 @@ export function splitIntoBlocks(text: string): string[] {
           currentBlock += (currentBlock ? " " : "") + sentenceTrimmed;
         }
       });
-      
+
       if (currentBlock) {
         blocks.push(currentBlock.trim());
       }
@@ -71,7 +71,7 @@ export function splitIntoBlocks(text: string): string[] {
  */
 export function getBlockPauseDuration(blockText: string): number {
   const length = blockText.length;
-  
+
   if (length < 50) return 200;
   if (length < 150) return 350;
   if (length < 300) return 450;
