@@ -100,10 +100,14 @@ export class IPService {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update user IP login");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.error || `Failed to update user IP login: ${response.status}`,
+        );
       }
     } catch (error) {
       console.error("Error updating user IP login:", error);
+      // Non-critical operation - don't block login
     }
   }
 
