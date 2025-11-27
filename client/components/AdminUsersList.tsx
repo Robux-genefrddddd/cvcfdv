@@ -28,12 +28,10 @@ export default function AdminUsersList({
   onWarnUser,
 }: AdminUsersListProps) {
   const { userData } = useAuth();
-  const [users, setUsers] = useState<(UserData & { ipInfo?: UserIP[] })[]>([]);
+  const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<UserData>>({});
-  const [userIPs, setUserIPs] = useState<Record<string, UserIP[]>>({});
-  const [showIPAlert, setShowIPAlert] = useState<Record<string, boolean>>({});
 
   const planLimits: Record<PlanType, number> = {
     Free: 10,
