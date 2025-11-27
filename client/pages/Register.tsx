@@ -74,8 +74,10 @@ export default function Register() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      toast.error("Les mots de passe ne correspondent pas");
+    // Verify captcha
+    if (!verifyCaptcha()) {
+      toast.error("Réponse au captcha incorrecte. Veuillez réessayer.");
+      generateCaptcha();
       return;
     }
 
