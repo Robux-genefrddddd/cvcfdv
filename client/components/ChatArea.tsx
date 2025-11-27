@@ -224,7 +224,7 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chatMessages, loading, isThinking, typingText]);
+  }, [chatMessages, loading, isThinking, typingText, renderedBlockCount]);
 
   // Handle saving message to Firebase when typing is complete
   useEffect(() => {
