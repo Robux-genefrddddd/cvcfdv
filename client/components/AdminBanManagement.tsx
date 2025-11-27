@@ -116,7 +116,6 @@ export default function AdminBanManagement({ users }: AdminBanManagementProps) {
     }
   };
 
-
   // Filtered and searched bans
   const filteredUserBans = useMemo(() => {
     let result = bans;
@@ -137,7 +136,6 @@ export default function AdminBanManagement({ users }: AdminBanManagementProps) {
 
     return result;
   }, [bans, filterType, showExpired, userSearchQuery]);
-
 
   const isExpired = (ban: UserBan) => {
     return ban.expiresAt && ban.expiresAt.toDate() < new Date();

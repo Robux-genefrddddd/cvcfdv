@@ -1,6 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, updateDoc, collection, query, where, onSnapshot } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import {
   SystemNoticesService,
@@ -81,7 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // Set up real-time listener for active maintenance
           const maintenanceQuery = query(
             collection(db, "maintenance_notices"),
-            where("isActive", "==", true)
+            where("isActive", "==", true),
           );
 
           const unsubscribeMaintenance = onSnapshot(
@@ -95,7 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 const noticeDoc = snapshot.docs[0];
                 const notice = {
                   id: noticeDoc.id,
-                  ...noticeDoc.data()
+                  ...noticeDoc.data(),
                 } as MaintenanceNotice;
 
                 // Check if maintenance has expired
@@ -108,7 +116,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             },
             (error) => {
               console.error("Error listening to maintenance notices:", error);
-            }
+            },
           );
 
           return unsubscribeMaintenance;

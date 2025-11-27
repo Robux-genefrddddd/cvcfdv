@@ -135,7 +135,11 @@ export default function Index() {
         title={maintenanceNotice.title}
         message={maintenanceNotice.message}
         severity={maintenanceNotice.severity}
-        onAcknowledge={maintenanceNotice.severity === "critical" ? undefined : () => setAcknowledgedMaintenance(true)}
+        onAcknowledge={
+          maintenanceNotice.severity === "critical"
+            ? undefined
+            : () => setAcknowledgedMaintenance(true)
+        }
         dismissible={maintenanceNotice.severity !== "critical"}
       />
     );

@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import {
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -138,7 +135,7 @@ export default function Admin() {
       const response = await fetch("/api/admin/users", {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${idToken}`,
+          Authorization: `Bearer ${idToken}`,
           "Content-Type": "application/json",
         },
       });
@@ -151,7 +148,11 @@ export default function Admin() {
       }
 
       if (!response.ok) {
-        throw new Error(data.message || data.error || "Erreur lors du chargement des utilisateurs");
+        throw new Error(
+          data.message ||
+            data.error ||
+            "Erreur lors du chargement des utilisateurs",
+        );
       }
 
       const usersList = data.users as UserData[];

@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db, auth } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -58,7 +55,7 @@ export default function AdminUsersList({
       const response = await fetch("/api/admin/users", {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${idToken}`,
+          Authorization: `Bearer ${idToken}`,
           "Content-Type": "application/json",
         },
       });
@@ -71,7 +68,11 @@ export default function AdminUsersList({
       }
 
       if (!response.ok) {
-        throw new Error(data.message || data.error || "Erreur lors du chargement des utilisateurs");
+        throw new Error(
+          data.message ||
+            data.error ||
+            "Erreur lors du chargement des utilisateurs",
+        );
       }
 
       const usersList = data.users as UserData[];
@@ -144,7 +145,6 @@ export default function AdminUsersList({
             {users.filter((u) => u.plan !== "Free").length}
           </p>
         </div>
-
       </div>
 
       {/* Users Table */}
