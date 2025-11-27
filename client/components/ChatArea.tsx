@@ -423,10 +423,10 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
             <PopoverTrigger asChild>
               <button
                 id="emoji-btn"
-                className="p-2 text-white/50 hover:text-white/80 transition-all duration-200 hover:bg-white/10 rounded-lg"
+                className="p-1.5 text-white/40 hover:text-white/70 transition-all duration-200 hover:bg-white/10 rounded-md"
                 aria-label="Ajouter un emoji"
               >
-                <Smile size={20} />
+                <Smile size={16} />
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-64 p-3 bg-card border border-white/20 rounded-2xl shadow-xl">
@@ -448,13 +448,13 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
           <button
             onClick={handleSend}
             disabled={loading || !message.trim()}
-            className="p-2.5 text-white/60 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 hover:bg-gradient-to-r hover:from-orange-600/40 hover:to-orange-500/30 rounded-lg flex items-center justify-center hover:scale-110 transform disabled:hover:scale-100"
+            className="p-1.5 text-white/40 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 hover:bg-white/10 rounded-md flex items-center justify-center"
             aria-label="Envoyer le message"
           >
             {loading ? (
-              <Loader2 size={20} className="animate-spin" />
+              <Loader2 size={16} className="animate-spin" />
             ) : (
-              <Send size={20} />
+              <Send size={16} />
             )}
           </button>
         </div>
