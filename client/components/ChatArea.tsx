@@ -392,11 +392,11 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
 
       {/* Message Input Area - Fixed at Bottom */}
       <div
-        className="px-4 sm:px-6 md:px-8 py-4 sm:py-6 animate-slideUp border-t border-white/10 bg-gradient-to-t from-background to-transparent"
+        className="px-4 sm:px-6 md:px-8 py-3 animate-slideUp border-t border-white/10 bg-gradient-to-t from-background to-transparent"
         style={{ animationDelay: "0.2s" }}
       >
         <div
-          className={`flex items-center gap-3 border-2 border-white/40 rounded-2xl px-5 py-4 bg-gradient-to-r from-white/6 to-white/10 backdrop-blur-md transition-all duration-300 group shadow-lg shadow-white/5 ${!conversationId ? "opacity-50 cursor-not-allowed" : "hover:border-white/60 hover:bg-gradient-to-r hover:from-white/10 hover:to-white/15 hover:shadow-lg hover:shadow-white/10 focus-within:border-white/80 focus-within:shadow-xl focus-within:shadow-white/15"}`}
+          className={`flex items-center gap-2 border border-white/30 rounded-lg px-3 py-2.5 bg-white/5 backdrop-blur-sm transition-all duration-300 group shadow-sm ${!conversationId ? "opacity-50 cursor-not-allowed" : "hover:border-white/50 hover:bg-white/8 focus-within:border-white/60 focus-within:shadow-md focus-within:shadow-white/10"}`}
         >
           <input
             id="message-input"
@@ -415,7 +415,7 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                 ? "Votre message..."
                 : "Sélectionnez une conversation..."
             }
-            className="flex-1 bg-transparent text-white placeholder-white/40 focus:outline-none text-sm leading-relaxed disabled:opacity-50 transition-colors"
+            className="flex-1 bg-transparent text-white placeholder-white/50 focus:outline-none text-sm leading-normal disabled:opacity-50 transition-colors"
           />
 
           {/* Emoji Picker */}
@@ -423,10 +423,10 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
             <PopoverTrigger asChild>
               <button
                 id="emoji-btn"
-                className="p-2 text-white/50 hover:text-white/80 transition-all duration-200 hover:bg-white/10 rounded-lg"
+                className="p-1.5 text-white/40 hover:text-white/70 transition-all duration-200 hover:bg-white/10 rounded-md"
                 aria-label="Ajouter un emoji"
               >
-                <Smile size={20} />
+                <Smile size={16} />
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-64 p-3 bg-card border border-white/20 rounded-2xl shadow-xl">
@@ -448,13 +448,13 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
           <button
             onClick={handleSend}
             disabled={loading || !message.trim()}
-            className="p-2.5 text-white/60 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 hover:bg-gradient-to-r hover:from-orange-600/40 hover:to-orange-500/30 rounded-lg flex items-center justify-center hover:scale-110 transform disabled:hover:scale-100"
+            className="p-1.5 text-white/40 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 hover:bg-white/10 rounded-md flex items-center justify-center"
             aria-label="Envoyer le message"
           >
             {loading ? (
-              <Loader2 size={20} className="animate-spin" />
+              <Loader2 size={16} className="animate-spin" />
             ) : (
-              <Send size={20} />
+              <Send size={16} />
             )}
           </button>
         </div>

@@ -1,5 +1,9 @@
 import { RequestHandler } from "express";
-import { getAdminDb, initializeFirebaseAdmin } from "../lib/firebase-admin";
+import {
+  getAdminDb,
+  initializeFirebaseAdmin,
+  isAdminInitialized,
+} from "../lib/firebase-admin";
 import { Timestamp } from "firebase-admin/firestore";
 
 // Initialize Firebase Admin on module load
@@ -31,7 +35,21 @@ export const handleCheckIPBan: RequestHandler = async (req, res) => {
       return;
     }
 
+    // If Firebase Admin is not initialized, return no ban
+    if (!isAdminInitialized()) {
+      console.warn(
+        "Firebase Admin not initialized. Set FIREBASE_SERVICE_ACCOUNT_KEY env var for IP ban checking.",
+      );
+      res.json({ banned: false });
+      return;
+    }
+
     const db = getAdminDb();
+    if (!db) {
+      res.json({ banned: false });
+      return;
+    }
+
     const snapshot = await db
       .collection("ip_bans")
       .where("ipAddress", "==", ipAddress)
@@ -76,7 +94,29 @@ export const handleCheckIPLimit: RequestHandler = async (req, res) => {
       return;
     }
 
+    // If Firebase Admin is not initialized, return no limit exceeded
+    if (!isAdminInitialized()) {
+      console.warn(
+        "Firebase Admin not initialized. Set FIREBASE_SERVICE_ACCOUNT_KEY env var for IP limit checking.",
+      );
+      res.json({
+        accountCount: 0,
+        maxAccounts,
+        isLimitExceeded: false,
+      });
+      return;
+    }
+
     const db = getAdminDb();
+    if (!db) {
+      res.json({
+        accountCount: 0,
+        maxAccounts,
+        isLimitExceeded: false,
+      });
+      return;
+    }
+
     const snapshot = await db
       .collection("user_ips")
       .where("ipAddress", "==", ipAddress)
@@ -105,7 +145,21 @@ export const handleRecordUserIP: RequestHandler = async (req, res) => {
       return;
     }
 
+    // If Firebase Admin is not initialized, skip recording
+    if (!isAdminInitialized()) {
+      console.warn(
+        "Firebase Admin not initialized. Skipping IP recording. Set FIREBASE_SERVICE_ACCOUNT_KEY env var.",
+      );
+      res.json({ success: true, ipId: "pending-initialization" });
+      return;
+    }
+
     const db = getAdminDb();
+    if (!db) {
+      res.json({ success: true, ipId: "pending-initialization" });
+      return;
+    }
+
     const now = Timestamp.now();
 
     const docRef = await db.collection("user_ips").add({
@@ -132,7 +186,21 @@ export const handleUpdateUserIPLogin: RequestHandler = async (req, res) => {
       return;
     }
 
+    // If Firebase Admin is not initialized, skip updating
+    if (!isAdminInitialized()) {
+      console.warn(
+        "Firebase Admin not initialized. Skipping IP login update. Set FIREBASE_SERVICE_ACCOUNT_KEY env var.",
+      );
+      res.json({ success: true });
+      return;
+    }
+
     const db = getAdminDb();
+    if (!db) {
+      res.json({ success: true });
+      return;
+    }
+
     const snapshot = await db
       .collection("user_ips")
       .where("userId", "==", userId)

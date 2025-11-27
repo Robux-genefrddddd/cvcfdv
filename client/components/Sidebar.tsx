@@ -213,77 +213,72 @@ export function Sidebar({
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 w-56 sm:w-64 bg-sidebar border-r-2 border-white/20 flex flex-col transition-transform duration-300 ${
+        className={`fixed inset-y-0 left-0 w-48 sm:w-52 bg-sidebar border-r border-white/[0.08] flex flex-col transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } z-50 animate-slideInLeft shadow-2xl shadow-black/50`}
+        } z-50 animate-slideInLeft`}
       >
         {/* Header - Minimal */}
-        <div className="p-3 sm:p-4 animate-fadeIn">
-          <div className="flex items-center gap-2 sm:gap-3 mb-2 justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-foreground rounded-full flex items-center justify-center text-background text-xs sm:text-sm font-bold border-2 border-white hover:scale-110 transition-transform flex-shrink-0">
+        <div className="p-3 sm:p-3 animate-fadeIn border-b border-white/[0.08]">
+          <div className="flex items-center gap-2.5 justify-between mb-2.5">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              <div className="w-7 h-7 bg-gradient-to-br from-primary/80 to-primary rounded-lg flex items-center justify-center text-primary-foreground text-xs font-semibold flex-shrink-0 shadow-md hover-lift">
                 {userInitial}
               </div>
-              <div className="hidden sm:block min-w-0">
-                <div className="flex items-center gap-1 sm:gap-2">
-                  <p className="text-xs sm:text-sm font-semibold text-foreground truncate">
-                    {loading ? "..." : userData?.displayName || "Utilisateur"}
-                  </p>
-                  {userData?.isAdmin && (
-                    <Shield size={14} className="text-red-500" title="Admin" />
-                  )}
-                </div>
-                <p className="text-xs text-white/50 font-medium">
-                  {loading ? "..." : userData?.plan || "Free"}
+              <div className="hidden sm:block min-w-0 flex-1">
+                <p className="text-xs font-medium text-foreground truncate leading-tight">
+                  {loading ? "..." : userData?.displayName || "User"}
+                </p>
+                <p className="text-xs text-muted-foreground truncate leading-tight">
+                  {loading ? "..." : userData?.email?.split("@")[0] || "Pro"}
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <button
                 onClick={onClose}
-                className="p-1.5 hover:bg-white/10 rounded-lg transition-colors text-foreground/70 hover:text-foreground"
-                aria-label="Fermer le menu"
-                title="Fermer le menu"
+                className="p-1.5 hover:bg-white/10 rounded-lg transition-all text-muted-foreground hover:text-foreground flex-shrink-0"
+                aria-label="Close"
+                title="Close"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
               <Popover open={isMenuOpen} onOpenChange={setIsMenuOpen}>
                 <PopoverTrigger asChild>
-                  <button className="p-1.5 hover:bg-white/10 rounded-lg transition-colors text-foreground/70 hover:text-foreground">
-                    <MoreVertical size={16} />
+                  <button className="p-1.5 hover:bg-white/10 rounded-lg transition-all text-muted-foreground hover:text-foreground flex-shrink-0">
+                    <MoreVertical size={14} />
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-40 p-2 bg-card border-2 border-white rounded-xl">
+                <PopoverContent className="w-36 p-2 bg-card border border-white/[0.1] rounded-lg">
                   <div className="space-y-1">
                     <button
                       onClick={() => {
                         setIsSettingsOpen(true);
                         setIsMenuOpen(false);
                       }}
-                      className="w-full text-left px-3 py-2 rounded-lg text-sm text-foreground/70 hover:text-foreground hover:bg-white/10 transition-colors"
+                      className="w-full text-left px-2.5 py-2 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-white/10 transition-colors"
                     >
-                      Paramètres
+                      Settings
                     </button>
                     <button
                       onClick={() => {
                         setIsHelpOpen(true);
                         setIsMenuOpen(false);
                       }}
-                      className="w-full text-left px-3 py-2 rounded-lg text-sm text-foreground/70 hover:text-foreground hover:bg-white/10 transition-colors"
+                      className="w-full text-left px-2.5 py-2 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-white/10 transition-colors"
                     >
-                      Aide
+                      Help
                     </button>
                     {userData?.isAdmin && (
                       <>
-                        <div className="h-px bg-white/10 my-1" />
+                        <div className="h-px bg-white/[0.08] my-1" />
                         <button
                           onClick={() => {
                             navigate("/admin");
                             setIsMenuOpen(false);
                           }}
-                          className="w-full text-left px-3 py-2 rounded-lg text-sm text-white font-semibold hover:bg-white/10 transition-colors"
+                          className="w-full text-left px-2.5 py-2 rounded-lg text-xs text-primary font-medium hover:bg-white/10 transition-colors"
                         >
-                          Panneau Admin
+                          Admin
                         </button>
                       </>
                     )}
@@ -297,29 +292,24 @@ export function Sidebar({
           </p>
         </div>
 
-        {/* Divider */}
-        <div className="px-4 py-0">
-          <div className="h-px bg-white/10"></div>
-        </div>
-
-        {/* New Conversation Button - Discreet */}
+        {/* New Conversation Button */}
         <div
-          className="px-4 py-2 animate-fadeIn"
+          className="px-3 py-3 animate-fadeIn"
           style={{ animationDelay: "0.1s" }}
         >
           <button
             id="new-conversation-btn"
             onClick={handleNewConversation}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 border border-white/40 text-foreground/70 hover:border-white/70 hover:text-foreground hover:bg-white/5 transition-all text-xs font-medium rounded-lg"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-primary/20 hover:bg-primary/30 text-primary font-medium text-xs rounded-lg transition-all duration-200 hover-lift"
           >
             <Plus size={14} />
-            Nouvelle conversation
+            <span>New</span>
           </button>
         </div>
 
         {/* Conversations List */}
-        <div id="conversations-list" className="flex-1 overflow-y-auto p-4">
-          <div className="space-y-2">
+        <div id="conversations-list" className="flex-1 overflow-y-auto p-3">
+          <div className="space-y-1.5">
             {conversations.map((conv, idx) => (
               <div
                 key={conv.id}
@@ -333,10 +323,10 @@ export function Sidebar({
                 }}
               >
                 <div
-                  className={`flex items-center gap-2 px-2 py-2 rounded-lg border-2 transition-all ${
+                  className={`flex items-center gap-2 px-2 py-2.5 rounded-lg transition-all border ${
                     conv.id === activeConversationId
-                      ? "bg-white/10 border-white"
-                      : "border-white/30 hover:border-white/60"
+                      ? "bg-primary/15 border-primary/40 text-foreground"
+                      : "border-white/[0.08] hover:bg-white/[0.05] text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <button
