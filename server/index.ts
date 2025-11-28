@@ -141,10 +141,13 @@ export function createServer() {
   apiRouter.post("/admin/unban-user", adminRateLimit, handleUnbanUser);
   apiRouter.post("/admin/reset-messages", adminRateLimit, handleResetMessages);
   apiRouter.post("/admin/delete-user", adminRateLimit, handleDeleteUser);
+  apiRouter.post("/admin/update-user-plan", adminRateLimit, handleUpdateUserPlan);
+  apiRouter.get("/admin/banned-users", adminRateLimit, handleGetBannedUsers);
 
   // License management
   apiRouter.get("/admin/licenses", adminRateLimit, handleGetLicenses);
   apiRouter.post("/admin/create-license", adminRateLimit, handleCreateLicense);
+  apiRouter.post("/admin/invalidate-license", adminRateLimit, handleInvalidateLicense);
   apiRouter.post("/admin/purge-licenses", adminRateLimit, handlePurgeLicenses);
 
   // AI configuration
@@ -153,6 +156,10 @@ export function createServer() {
 
   // System stats
   apiRouter.get("/admin/system-stats", adminRateLimit, handleGetSystemStats);
+
+  // Admin logs
+  apiRouter.get("/admin/logs", adminRateLimit, handleGetAdminLogs);
+  apiRouter.post("/admin/clear-logs", adminRateLimit, handleClearOldLogs);
 
   // Verification
   apiRouter.post("/admin/verify", adminRateLimit, handleVerifyAdmin);
