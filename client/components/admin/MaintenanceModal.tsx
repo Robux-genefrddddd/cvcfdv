@@ -14,7 +14,6 @@ export type MaintenanceType =
   | "ai"
   | "licenses"
   | "auth"
-
   | "payments";
 
 export interface MaintenanceData {
@@ -27,7 +26,8 @@ const MAINTENANCE_OPTIONS = [
   {
     id: "global",
     title: "Maintenance globale",
-    description: "Le site devient complètement indisponible pour tous les utilisateurs",
+    description:
+      "Le site devient complètement indisponible pour tous les utilisateurs",
     color: "red",
   },
   {
@@ -175,9 +175,7 @@ export default function MaintenanceModal({
                     className="text-amber-400 mt-0.5 flex-shrink-0"
                   />
                   <div className="text-sm text-foreground/80">
-                    <p className="font-medium text-white mb-1">
-                      Attention
-                    </p>
+                    <p className="font-medium text-white mb-1">Attention</p>
                     <p>
                       {selectedType === "global"
                         ? "Cette action rendra le site inaccessible pour tous les utilisateurs sauf les administrateurs."

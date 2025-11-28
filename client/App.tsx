@@ -76,7 +76,8 @@ interface MaintenanceStatus {
 
 function MaintenanceWrapper({ children }: { children: React.ReactNode }) {
   const { user, userData } = useAuth();
-  const [maintenanceStatus, setMaintenanceStatus] = useState<MaintenanceStatus | null>(null);
+  const [maintenanceStatus, setMaintenanceStatus] =
+    useState<MaintenanceStatus | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

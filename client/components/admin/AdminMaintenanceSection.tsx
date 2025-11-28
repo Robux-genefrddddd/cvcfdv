@@ -10,7 +10,10 @@ import {
   AlertTriangle,
   Power,
 } from "lucide-react";
-import MaintenanceModal, { MaintenanceType, MaintenanceData } from "./MaintenanceModal";
+import MaintenanceModal, {
+  MaintenanceType,
+  MaintenanceData,
+} from "./MaintenanceModal";
 
 interface MaintenanceStatus {
   global: boolean;
@@ -35,7 +38,8 @@ export default function AdminMaintenanceSection() {
     timestamp: Date;
   } | null>(null);
   const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
-  const [maintenanceStatus, setMaintenanceStatus] = useState<MaintenanceStatus | null>(null);
+  const [maintenanceStatus, setMaintenanceStatus] =
+    useState<MaintenanceStatus | null>(null);
   const [fetchingStatus, setFetchingStatus] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -200,7 +204,9 @@ export default function AdminMaintenanceSection() {
 
       if (!response.ok) {
         throw new Error(
-          responseData.message || responseData.error || "Erreur lors de l'opération",
+          responseData.message ||
+            responseData.error ||
+            "Erreur lors de l'opération",
         );
       }
 
@@ -238,7 +244,9 @@ export default function AdminMaintenanceSection() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || data.error || "Erreur lors de l'opération");
+        throw new Error(
+          data.message || data.error || "Erreur lors de l'opération",
+        );
       }
 
       await fetchMaintenanceStatus();
@@ -264,28 +272,35 @@ export default function AdminMaintenanceSection() {
         </p>
       </div>
 
-      {maintenanceStatus && (maintenanceStatus.global || maintenanceStatus.partial) && (
-        <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4">
-          <div className="flex items-start gap-3">
-            <AlertTriangle size={20} className="text-red-400 mt-0.5" />
-            <div className="flex-1">
-              <p className="text-sm font-medium text-red-300">
-                {maintenanceStatus.global ? "Maintenance globale active" : "Maintenance partielle active"}
-              </p>
-              <p className="text-sm text-red-300/70 mt-1">
-                {maintenanceStatus.message}
-              </p>
-              <button
-                onClick={() => handleDisableMaintenance(maintenanceStatus.global ? "global" : "partial")}
-                disabled={loading !== null}
-                className="text-xs text-red-300/70 hover:text-red-300 mt-2 underline"
-              >
-                Désactiver maintenant
-              </button>
+      {maintenanceStatus &&
+        (maintenanceStatus.global || maintenanceStatus.partial) && (
+          <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle size={20} className="text-red-400 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-red-300">
+                  {maintenanceStatus.global
+                    ? "Maintenance globale active"
+                    : "Maintenance partielle active"}
+                </p>
+                <p className="text-sm text-red-300/70 mt-1">
+                  {maintenanceStatus.message}
+                </p>
+                <button
+                  onClick={() =>
+                    handleDisableMaintenance(
+                      maintenanceStatus.global ? "global" : "partial",
+                    )
+                  }
+                  disabled={loading !== null}
+                  className="text-xs text-red-300/70 hover:text-red-300 mt-2 underline"
+                >
+                  Désactiver maintenant
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
       <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
         <div className="flex items-start justify-between mb-4">

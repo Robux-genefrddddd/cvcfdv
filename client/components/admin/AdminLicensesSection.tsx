@@ -1,7 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { auth } from "@/lib/firebase";
 import { toast } from "sonner";
-import { Loader2, Plus, Copy, X, Check, AlertCircle, AlertTriangle, Trash2 } from "lucide-react";
+import {
+  Loader2,
+  Plus,
+  Copy,
+  X,
+  Check,
+  AlertCircle,
+  AlertTriangle,
+  Trash2,
+} from "lucide-react";
 
 interface License {
   key: string;
@@ -146,8 +155,7 @@ export default function AdminLicensesSection() {
         let errorMessage = "Erreur lors de la suppression";
         try {
           const errorData = await response.json();
-          errorMessage =
-            errorData.message || errorData.error || errorMessage;
+          errorMessage = errorData.message || errorData.error || errorMessage;
         } catch {
           errorMessage = response.statusText || errorMessage;
         }
@@ -387,7 +395,8 @@ export default function AdminLicensesSection() {
                     Supprimer la licence
                   </h2>
                   <p className="text-sm text-foreground/70 mt-2">
-                    Êtes-vous sûr de vouloir supprimer définitivement cette licence ?
+                    Êtes-vous sûr de vouloir supprimer définitivement cette
+                    licence ?
                   </p>
                 </div>
               </div>

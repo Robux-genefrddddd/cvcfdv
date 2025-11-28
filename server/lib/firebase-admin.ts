@@ -582,20 +582,20 @@ export class FirebaseAdminService {
   }
 
   // Enable global maintenance
-  static async enableGlobalMaintenance(
-    adminUid: string,
-    message: string = "",
-  ) {
+  static async enableGlobalMaintenance(adminUid: string, message: string = "") {
     if (!adminDb) throw new Error("Database not initialized");
 
-    await adminDb.collection("settings").doc("maintenance").set({
-      global: true,
-      partial: false,
-      services: [],
-      message: message || "Le site est actuellement en maintenance",
-      startedAt: Timestamp.now(),
-      enabledBy: adminUid,
-    });
+    await adminDb
+      .collection("settings")
+      .doc("maintenance")
+      .set({
+        global: true,
+        partial: false,
+        services: [],
+        message: message || "Le site est actuellement en maintenance",
+        startedAt: Timestamp.now(),
+        enabledBy: adminUid,
+      });
 
     await this.logAdminAction(adminUid, "ENABLE_GLOBAL_MAINTENANCE", {
       message,
@@ -627,14 +627,17 @@ export class FirebaseAdminService {
   ) {
     if (!adminDb) throw new Error("Database not initialized");
 
-    await adminDb.collection("settings").doc("maintenance").set({
-      global: false,
-      partial: true,
-      services,
-      message: message || "Certains services peuvent être indisponibles",
-      startedAt: Timestamp.now(),
-      enabledBy: adminUid,
-    });
+    await adminDb
+      .collection("settings")
+      .doc("maintenance")
+      .set({
+        global: false,
+        partial: true,
+        services,
+        message: message || "Certains services peuvent être indisponibles",
+        startedAt: Timestamp.now(),
+        enabledBy: adminUid,
+      });
 
     await this.logAdminAction(adminUid, "ENABLE_PARTIAL_MAINTENANCE", {
       services,

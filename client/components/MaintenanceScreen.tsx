@@ -29,7 +29,8 @@ export default function MaintenanceScreen() {
         </p>
 
         <p className="text-sm text-foreground/50">
-          Nos équipes travaillent à la restauration du service. Veuillez réessayer dans quelques minutes.
+          Nos équipes travaillent à la restauration du service. Veuillez
+          réessayer dans quelques minutes.
         </p>
 
         <div className="mt-12 pt-8 border-t border-white/5">

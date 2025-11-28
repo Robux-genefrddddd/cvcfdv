@@ -65,8 +65,7 @@ export default function AdminUsersSection() {
         let errorMessage = "Erreur serveur";
         try {
           const errorData = await response.json();
-          errorMessage =
-            errorData.message || errorData.error || errorMessage;
+          errorMessage = errorData.message || errorData.error || errorMessage;
         } catch {
           // If we can't parse error details, use the status text
           errorMessage = response.statusText || errorMessage;
@@ -161,8 +160,7 @@ export default function AdminUsersSection() {
         let errorMessage = "Action échouée";
         try {
           const errorData = await response.json();
-          errorMessage =
-            errorData.message || errorData.error || errorMessage;
+          errorMessage = errorData.message || errorData.error || errorMessage;
         } catch {
           // If we can't parse error details, use the status text
           errorMessage = response.statusText || errorMessage;
