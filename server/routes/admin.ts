@@ -410,3 +410,116 @@ export const handleVerifyAdmin: RequestHandler = async (req, res) => {
     return res.status(401).json({ success: false, message });
   }
 };
+
+// Get maintenance status
+export const handleGetMaintenanceStatus: RequestHandler = async (req, res) => {
+  try {
+    const status = await FirebaseAdminService.getMaintenanceStatus();
+    return res.json({ success: true, status });
+  } catch (error) {
+    console.error("Get maintenance status error:", error);
+    const message = error instanceof Error ? error.message : "Operation failed";
+    return res.status(500).json({ success: false, message });
+  }
+};
+
+// Enable global maintenance
+export const handleEnableGlobalMaintenance: RequestHandler = async (
+  req,
+  res,
+) => {
+  try {
+    const idToken = extractIdToken(req.headers.authorization);
+    const adminUid = await FirebaseAdminService.verifyAdmin(idToken);
+
+    const { message } = z
+      .object({
+        message: z.string().optional(),
+      })
+      .parse(req.body);
+
+    await FirebaseAdminService.enableGlobalMaintenance(adminUid, message);
+
+    return res.json({ success: true, message: "Global maintenance enabled" });
+  } catch (error) {
+    console.error("Enable global maintenance error:", error);
+    const status = error instanceof z.ZodError ? 400 : 401;
+    const message = error instanceof Error ? error.message : "Operation failed";
+    return res.status(status).json({ success: false, message });
+  }
+};
+
+// Disable global maintenance
+export const handleDisableGlobalMaintenance: RequestHandler = async (
+  req,
+  res,
+) => {
+  try {
+    const idToken = extractIdToken(req.headers.authorization);
+    const adminUid = await FirebaseAdminService.verifyAdmin(idToken);
+
+    await FirebaseAdminService.disableGlobalMaintenance(adminUid);
+
+    return res.json({ success: true, message: "Global maintenance disabled" });
+  } catch (error) {
+    console.error("Disable global maintenance error:", error);
+    const message = error instanceof Error ? error.message : "Operation failed";
+    return res.status(401).json({ success: false, message });
+  }
+};
+
+// Enable partial maintenance
+export const handleEnablePartialMaintenance: RequestHandler = async (
+  req,
+  res,
+) => {
+  try {
+    const idToken = extractIdToken(req.headers.authorization);
+    const adminUid = await FirebaseAdminService.verifyAdmin(idToken);
+
+    const { services, message } = z
+      .object({
+        services: z.array(z.string()).optional().default([]),
+        message: z.string().optional(),
+      })
+      .parse(req.body);
+
+    await FirebaseAdminService.enablePartialMaintenance(
+      adminUid,
+      services,
+      message,
+    );
+
+    return res.json({
+      success: true,
+      message: "Partial maintenance enabled",
+    });
+  } catch (error) {
+    console.error("Enable partial maintenance error:", error);
+    const status = error instanceof z.ZodError ? 400 : 401;
+    const message = error instanceof Error ? error.message : "Operation failed";
+    return res.status(status).json({ success: false, message });
+  }
+};
+
+// Disable partial maintenance
+export const handleDisablePartialMaintenance: RequestHandler = async (
+  req,
+  res,
+) => {
+  try {
+    const idToken = extractIdToken(req.headers.authorization);
+    const adminUid = await FirebaseAdminService.verifyAdmin(idToken);
+
+    await FirebaseAdminService.disablePartialMaintenance(adminUid);
+
+    return res.json({
+      success: true,
+      message: "Partial maintenance disabled",
+    });
+  } catch (error) {
+    console.error("Disable partial maintenance error:", error);
+    const message = error instanceof Error ? error.message : "Operation failed";
+    return res.status(401).json({ success: false, message });
+  }
+};
