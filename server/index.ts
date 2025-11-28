@@ -183,6 +183,29 @@ export function createServer() {
   // Verification
   apiRouter.post("/admin/verify", adminRateLimit, handleVerifyAdmin);
 
+  // Maintenance management
+  apiRouter.get("/admin/maintenance-status", handleGetMaintenanceStatus);
+  apiRouter.post(
+    "/admin/enable-global-maintenance",
+    adminRateLimit,
+    handleEnableGlobalMaintenance,
+  );
+  apiRouter.post(
+    "/admin/disable-global-maintenance",
+    adminRateLimit,
+    handleDisableGlobalMaintenance,
+  );
+  apiRouter.post(
+    "/admin/enable-partial-maintenance",
+    adminRateLimit,
+    handleEnablePartialMaintenance,
+  );
+  apiRouter.post(
+    "/admin/disable-partial-maintenance",
+    adminRateLimit,
+    handleDisablePartialMaintenance,
+  );
+
   // Mount API router
   app.use("/api", apiRouter);
 
