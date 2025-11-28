@@ -39,7 +39,7 @@ export default function AdminUsersSection() {
     };
   }, []);
 
-  const loadUsers = async () => {
+  const loadUsers = async (signal?: AbortSignal) => {
     try {
       setLoading(true);
       setError(null);
@@ -49,6 +49,7 @@ export default function AdminUsersSection() {
       const idToken = await currentUser.getIdToken();
       const response = await fetch("/api/admin/users", {
         headers: { Authorization: `Bearer ${idToken}` },
+        signal,
       });
 
       const data = await response.json();
@@ -63,6 +64,12 @@ export default function AdminUsersSection() {
 
       setUsers(data.users || []);
     } catch (error) {
+      // Don't show error if request was aborted (component unmounted)
+      if (error instanceof Error && error.name === "AbortError") {
+        console.log("Users request was cancelled");
+        return;
+      }
+
       const errorMsg =
         error instanceof Error ? error.message : "Erreur lors du chargement";
       setError(errorMsg);
