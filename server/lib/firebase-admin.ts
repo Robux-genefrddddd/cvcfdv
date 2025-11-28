@@ -357,6 +357,21 @@ export class FirebaseAdminService {
     });
   }
 
+  // Delete license
+  static async deleteLicense(adminUid: string, licenseKey: string) {
+    if (!adminDb) throw new Error("Database not initialized");
+
+    const license = await adminDb.collection("licenses").doc(licenseKey).get();
+    if (!license.exists) throw new Error("License not found");
+
+    await adminDb.collection("licenses").doc(licenseKey).delete();
+
+    await this.logAdminAction(adminUid, "DELETE_LICENSE", {
+      licenseKey,
+      plan: license.data().plan,
+    });
+  }
+
   // Get system statistics
   static async getSystemStats() {
     if (!adminDb) throw new Error("Database not initialized");
