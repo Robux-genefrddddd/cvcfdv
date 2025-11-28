@@ -1,4 +1,4 @@
-import { initializeApp, cert } from "firebase-admin/app";
+import { initializeApp, cert, getApp, getApps } from "firebase-admin/app";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import { getAuth } from "firebase-admin/auth";
 
@@ -19,11 +19,17 @@ export function initializeFirebaseAdmin() {
       return;
     }
 
-    const serviceAccount = JSON.parse(serviceAccountKey);
-    const app = initializeApp({
-      credential: cert(serviceAccount),
-      projectId: serviceAccount.project_id,
-    });
+    // Check if app already exists
+    let app;
+    if (getApps().length > 0) {
+      app = getApp();
+    } else {
+      const serviceAccount = JSON.parse(serviceAccountKey);
+      app = initializeApp({
+        credential: cert(serviceAccount),
+        projectId: serviceAccount.project_id,
+      });
+    }
 
     adminDb = getFirestore(app);
     adminAuth = getAuth(app);
