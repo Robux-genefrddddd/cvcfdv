@@ -12,6 +12,7 @@ interface ActionConfirmModalProps {
 export default function ActionConfirmModal({
   type,
   email,
+  plan,
   onConfirm,
   onCancel,
   isLoading,
@@ -21,37 +22,43 @@ export default function ActionConfirmModal({
       title: "Promouvoir en administrateur",
       description: `Êtes-vous sûr de vouloir promouvoir ${email} en administrateur ? Cette personne aura accès complet au panneau de contrôle.`,
       confirmText: "Promouvoir",
-      color: "purple",
+      color: "purple" as const,
     },
     demote: {
       title: "Rétrograder en utilisateur",
       description: `Êtes-vous sûr de vouloir rétrograder ${email} ? Cette personne perdra tous les droits administrateur.`,
       confirmText: "Rétrograder",
-      color: "slate",
+      color: "slate" as const,
     },
     ban: {
       title: "Bannir cet utilisateur",
       description: `Êtes-vous sûr de vouloir bannir ${email} ? Cette personne ne pourra plus se connecter.`,
       confirmText: "Bannir",
-      color: "red",
+      color: "red" as const,
     },
     unban: {
       title: "Débannir cet utilisateur",
       description: `Êtes-vous sûr de vouloir débannir ${email} ? Cette personne pourra à nouveau se connecter.`,
       confirmText: "Débannir",
-      color: "emerald",
+      color: "emerald" as const,
     },
     reset: {
       title: "Réinitialiser les messages",
       description: `Êtes-vous sûr de vouloir réinitialiser le compteur de messages pour ${email} ?`,
       confirmText: "Réinitialiser",
-      color: "amber",
+      color: "amber" as const,
     },
     delete: {
       title: "Supprimer cet utilisateur",
       description: `Êtes-vous absolument sûr ? La suppression de ${email} est irréversible. Tous les messages et données seront perdus.`,
       confirmText: "Supprimer",
-      color: "red",
+      color: "red" as const,
+    },
+    plan: {
+      title: "Modifier le plan d'utilisateur",
+      description: `Êtes-vous sûr de vouloir modifier le plan de ${email} en "${plan}" ?`,
+      confirmText: "Modifier",
+      color: "blue" as const,
     },
   };
 
