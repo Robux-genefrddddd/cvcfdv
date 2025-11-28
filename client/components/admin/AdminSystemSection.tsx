@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { auth } from "@/lib/firebase";
-import { Loader2, Users, Zap, FileText, Activity } from "lucide-react";
+import { Loader2, Users, Zap, FileText, Activity, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import {
   LineChart,
@@ -35,39 +35,41 @@ interface SystemStats {
 export default function AdminSystemSection() {
   const [stats, setStats] = useState<SystemStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [chartData, setChartData] = useState<any[]>([]);
   const [planData, setPlanData] = useState<any[]>([]);
 
   useEffect(() => {
     loadStats();
-    const interval = setInterval(loadStats, 60000); // Refresh every 60 seconds
+    const interval = setInterval(loadStats, 60000);
     return () => clearInterval(interval);
   }, []);
 
   const loadStats = async () => {
     try {
       const currentUser = auth.currentUser;
-      if (!currentUser) throw new Error("Not authenticated");
+      if (!currentUser) throw new Error("Non authentifié");
 
       const idToken = await currentUser.getIdToken();
       const response = await fetch("/api/admin/system-stats", {
         headers: { Authorization: `Bearer ${idToken}` },
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to load statistics");
+        throw new Error(data.message || data.error || "Erreur serveur");
       }
 
-      const data: SystemStats = await response.json();
       setStats(data);
+      setError(null);
 
-      // Prepare chart data from activity by day
       const lastSevenDays: any[] = [];
       for (let i = 6; i >= 0; i--) {
         const date = new Date();
         date.setDate(date.getDate() - i);
         const dateStr = date.toISOString().split("T")[0];
-        const activity = data.activityByDay[dateStr] || 0;
+        const activity = data.activityByDay?.[dateStr] || 0;
 
         lastSevenDays.push({
           date: date.toLocaleDateString("fr-FR", {
@@ -79,25 +81,22 @@ export default function AdminSystemSection() {
       }
       setChartData(lastSevenDays);
 
-      // Prepare plan distribution data
       setPlanData([
         { name: "Free", value: data.freeUsers, color: "#64748b" },
-        {
-          name: "Premium",
-          value: data.proUsers,
-          color: "#3b82f6",
-        },
+        { name: "Premium", value: data.proUsers, color: "#3b82f6" },
         { name: "Admin", value: data.adminUsers, color: "#8b5cf6" },
       ]);
     } catch (error) {
+      const errorMsg =
+        error instanceof Error ? error.message : "Erreur de chargement";
+      setError(errorMsg);
       console.error("Error loading stats:", error);
-      toast.error("Erreur lors du chargement des statistiques");
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading || !stats) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 size={32} className="animate-spin text-foreground/60" />
@@ -105,9 +104,42 @@ export default function AdminSystemSection() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-lg font-semibold text-white">
+            Vue d'ensemble système
+          </h2>
+          <p className="text-sm text-foreground/60 mt-1">
+            Analyse des statistiques en temps réel
+          </p>
+        </div>
+
+        <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-6">
+          <div className="flex items-start gap-3">
+            <AlertCircle size={20} className="text-red-400 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-red-300">{error}</p>
+              <button
+                onClick={loadStats}
+                className="text-xs text-red-300/70 hover:text-red-300 mt-3 underline"
+              >
+                Réessayer le chargement
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!stats) {
+    return null;
+  }
+
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div>
         <h2 className="text-lg font-semibold text-white">
           Vue d'ensemble système
@@ -117,7 +149,6 @@ export default function AdminSystemSection() {
         </p>
       </div>
 
-      {/* Key Metrics */}
       <div className="grid grid-cols-4 gap-4">
         <MetricCard
           label="Utilisateurs"
@@ -149,9 +180,7 @@ export default function AdminSystemSection() {
         />
       </div>
 
-      {/* Charts Grid */}
       <div className="grid grid-cols-2 gap-6">
-        {/* Activity Chart */}
         <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
           <h3 className="text-sm font-semibold text-white mb-4">
             Activité admin (7 jours)
@@ -184,7 +213,6 @@ export default function AdminSystemSection() {
           </ResponsiveContainer>
         </div>
 
-        {/* Distribution Chart */}
         <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
           <h3 className="text-sm font-semibold text-white mb-4">
             Distribution des utilisateurs
@@ -217,9 +245,7 @@ export default function AdminSystemSection() {
         </div>
       </div>
 
-      {/* Statistics Grid */}
       <div className="grid grid-cols-2 gap-6">
-        {/* User Statistics */}
         <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
           <h3 className="text-sm font-semibold text-white mb-6">
             Répartition des utilisateurs
@@ -252,7 +278,6 @@ export default function AdminSystemSection() {
           </div>
         </div>
 
-        {/* License Statistics */}
         <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
           <h3 className="text-sm font-semibold text-white mb-6">
             Statistiques des licences
@@ -291,7 +316,6 @@ export default function AdminSystemSection() {
         </div>
       </div>
 
-      {/* Last Updated */}
       <p className="text-xs text-foreground/50 text-center pt-4">
         Données actualisées à {new Date().toLocaleTimeString("fr-FR")}
       </p>
