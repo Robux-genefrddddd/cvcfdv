@@ -18,6 +18,13 @@ export const handleAIChat: RequestHandler = async (req, res) => {
 
     // Verify authentication
     const auth = getAdminAuth();
+
+    if (!auth) {
+      return res.status(503).json({
+        error: "Service temporarily unavailable. Firebase not initialized.",
+      });
+    }
+
     let decoded;
     try {
       decoded = await auth.verifyIdToken(idToken);
