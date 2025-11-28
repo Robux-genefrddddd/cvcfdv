@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { auth } from "@/lib/firebase";
 import { toast } from "sonner";
-import { Loader2, Plus, Copy, X, Check, AlertCircle } from "lucide-react";
+import { Loader2, Plus, Copy, X, Check, AlertCircle, AlertTriangle, Trash2 } from "lucide-react";
 
 interface License {
   key: string;
@@ -24,6 +24,8 @@ export default function AdminLicensesSection() {
   >("Pro");
   const [validityDays, setValidityDays] = useState(365);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [deletingKey, setDeletingKey] = useState<string | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
