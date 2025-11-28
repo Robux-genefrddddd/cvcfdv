@@ -272,22 +272,32 @@ export default function AdminLicensesSection() {
                   {license.usedBy || "-"}
                 </td>
                 <td className="px-6 py-4">
-                  <button
-                    onClick={() => copyToClipboard(license.key)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-white/10 hover:bg-white/20 text-white transition-colors"
-                  >
-                    {copiedKey === license.key ? (
-                      <>
-                        <Check size={14} />
-                        Copié
-                      </>
-                    ) : (
-                      <>
-                        <Copy size={14} />
-                        Copier
-                      </>
-                    )}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => copyToClipboard(license.key)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-white/10 hover:bg-white/20 text-white transition-colors"
+                    >
+                      {copiedKey === license.key ? (
+                        <>
+                          <Check size={14} />
+                          Copié
+                        </>
+                      ) : (
+                        <>
+                          <Copy size={14} />
+                          Copier
+                        </>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setDeleteConfirm(license.key)}
+                      disabled={deletingKey === license.key}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-red-500/20 hover:bg-red-500/30 text-red-300 transition-colors disabled:opacity-50"
+                    >
+                      <Trash2 size={14} />
+                      Supprimer
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
