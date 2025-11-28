@@ -66,80 +66,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [maintenanceNotice, setMaintenanceNotice] =
     useState<MaintenanceNotice | null>(null);
 
-  // Real-time listener for maintenance notices
+  // Polling for maintenance notices (every 30 seconds)
   useEffect(() => {
     let isMounted = true;
-    let unsubscribeMaintenance: (() => void) | null = null;
+    let timeoutId: NodeJS.Timeout;
 
-    const setupMaintenanceListener = async () => {
+    const checkMaintenance = async () => {
+      if (!isMounted) return;
+
       try {
-        const maintenanceQuery = query(
-          collection(db, "maintenance_notices"),
-          where("isActive", "==", true),
-        );
-
-        unsubscribeMaintenance = onSnapshot(
-          maintenanceQuery,
-          (snapshot) => {
-            if (!isMounted) return;
-
-            if (snapshot.empty) {
-              setMaintenanceNotice(null);
-            } else {
-              const noticeDoc = snapshot.docs[0];
-              const notice = {
-                id: noticeDoc.id,
-                ...noticeDoc.data(),
-              } as MaintenanceNotice;
-
-              // Check if maintenance has expired
-              if (notice.endTime && notice.endTime.toDate() < new Date()) {
-                setMaintenanceNotice(null);
-              } else {
-                setMaintenanceNotice(notice);
-              }
-            }
-          },
-          (error) => {
-            console.error("Error listening to maintenance notices:", error);
-            // Fallback: try to load once
-            if (isMounted) {
-              SystemNoticesService.getActiveMaintenanceNotice()
-                .then((notice) => {
-                  if (isMounted) {
-                    setMaintenanceNotice(notice);
-                  }
-                })
-                .catch((err) => {
-                  console.error("Fallback maintenance load failed:", err);
-                });
-            }
-          },
-        );
-      } catch (error) {
-        console.error("Failed to set up maintenance listener:", error);
-        // Fallback: try to load once
+        const maintenance =
+          await SystemNoticesService.getActiveMaintenanceNotice();
         if (isMounted) {
-          SystemNoticesService.getActiveMaintenanceNotice()
-            .then((notice) => {
-              if (isMounted) {
-                setMaintenanceNotice(notice);
-              }
-            })
-            .catch((err) => {
-              console.error("Fallback maintenance load failed:", err);
-            });
+          setMaintenanceNotice(maintenance);
         }
+      } catch (error) {
+        console.error("Error checking maintenance notices:", error);
+      }
+
+      if (isMounted) {
+        timeoutId = setTimeout(checkMaintenance, 30000); // Check every 30 seconds
       }
     };
 
-    setupMaintenanceListener();
+    // Check immediately on mount
+    checkMaintenance();
 
     return () => {
       isMounted = false;
-      if (unsubscribeMaintenance) {
-        unsubscribeMaintenance();
-      }
+      clearTimeout(timeoutId);
     };
   }, []);
 
