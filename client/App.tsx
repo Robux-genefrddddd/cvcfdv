@@ -16,7 +16,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { TOSProvider, useTOS } from "@/contexts/TOSContext";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -25,6 +25,7 @@ import Register from "./pages/Register";
 import Admin from "./pages/Admin";
 import { BanModal } from "@/components/BanModal";
 import TOSModal from "@/components/TOSModal";
+import MaintenanceScreen from "@/components/MaintenanceScreen";
 
 const queryClient = new QueryClient();
 
